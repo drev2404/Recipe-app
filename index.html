@@ -2,105 +2,150 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What Can I Cook?</title>
-  <style>
+  <meta name="description" content="AI-powered recipe generator that turns your ingredients into multiple personalized meal ideas with cooking time, servings, and diet options." />
+  <meta name="keywords" content="recipe generator, AI recipes, what can I cook, ingredients recipe, meal planner, cooking app" />
+  <meta name="author" content="Recipe App" />
+  <title>What Can I Cook? | AI Recipe Generator</title>  <style>
     body {
       font-family: Arial, sans-serif;
       background: #f6f6f6;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }.container {
-  width: 100%;
-  max-width: 600px;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-p {
-  text-align: center;
-  color: #666;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #218838;
-}
-
-.output {
-  margin-top: 20px;
-  white-space: pre-wrap;
-  background: #f1f1f1;
-  padding: 15px;
-  border-radius: 8px;
-}
-
-.small {
-  font-size: 12px;
-  color: #888;
-  margin-top: 10px;
-  text-align: center;
-}
-
-  </style>
-</head>
-<body>  <div class="container">
-    <h1>🍳 What Can I Cook?</h1>
-    <p>Enter ingredients you have and get a recipe instantly</p><input id="ingredients" placeholder="e.g. chicken, rice, garlic" />
-<button onclick="generateRecipe()">Generate Recipe</button>
-
-<div class="output" id="output">Your recipe will appear here...</div>
-
-<div class="small">
-  Demo version (no API required yet)
-</div>
-
-  </div>  <script>
-    function generateRecipe() {
-      const ingredients = document.getElementById('ingredients').value;
-      const output = document.getElementById('output');
-
-      if (!ingredients) {
-        output.innerText = "Please enter some ingredients.";
-        return;
-      }
-
-      // MOCK AI RESPONSE (replace later with real API)
-      const recipeName = "Simple " + ingredients.split(',')[0] + " Skillet";
-
-      const response = `🍽️ ${recipeName}\n\nIngredients:\n${ingredients}\n\nOptional: salt, pepper, olive oil, butter\n\nInstructions:\n1. Heat a pan over medium heat\n2. Add oil or butter\n3. Cook main ingredients until done\n4. Season to taste\n5. Serve hot and enjoy`;
-
-      output.innerText = response;
     }
-  </script></body>
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    p {
+      text-align: center;
+      color: #666;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    .recipe {
+      background: #f1f1f1;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+    }
+
+    .recipe-title {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .small {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 10px;
+    }
+  </style></head>
+<body><div class="container">
+  <h1>🍳 What Can I Cook?</h1>
+  <p>Turn ingredients into multiple AI-powered recipes instantly</p>  <input id="ingredients" placeholder="Enter ingredients (e.g. chicken, rice, garlic)" />  <div class="grid">
+    <input id="servings" type="number" placeholder="Servings (e.g. 2)" />
+    <input id="time" type="number" placeholder="Max cook time (mins)" />
+  </div>  <div class="grid">
+    <select id="diet">
+      <option value="">Any Diet</option>
+      <option value="high-protein">High Protein</option>
+      <option value="keto">Keto</option>
+      <option value="vegan">Vegan</option>
+      <option value="low-carb">Low Carb</option>
+    </select><select id="style">
+  <option value="">Any Style</option>
+  <option value="grilled">Grilled</option>
+  <option value="fried">Fried</option>
+  <option value="baked">Baked</option>
+  <option value="air-fryer">Air Fryer</option>
+</select>
+
+  </div><button onclick="generateRecipes()">Generate Recipes</button>
+
+  <div id="output"></div>  <div class="small">Demo version (AI upgrade coming soon)</div>
+</div><script>
+function generateRecipes() {
+  const ingredients = document.getElementById('ingredients').value;
+  const servings = document.getElementById('servings').value || 2;
+  const time = document.getElementById('time').value || 30;
+  const diet = document.getElementById('diet').value;
+  const style = document.getElementById('style').value;
+
+  const output = document.getElementById('output');
+
+  if (!ingredients) {
+    output.innerHTML = "<p>Please enter ingredients.</p>";
+    return;
+  }
+
+  const base = ingredients.split(',')[0];
+
+  const recipes = [1,2,3].map(i => {
+    return `
+<div class="recipe">
+<div class="recipe-title">🍽️ Recipe ${i}: ${base} Dish ${i}</div>
+
+Servings: ${servings}
+Time: ${time} mins
+Diet: ${diet || "Any"}
+Style: ${style || "Any"}
+
+Ingredients:
+${ingredients}, salt, pepper, olive oil
+
+Instructions:
+1. Prepare ingredients
+2. Cook using ${style || "basic method"}
+3. Season to taste
+4. Serve hot
+</div>
+`;
+  }).join('');
+
+  output.innerHTML = recipes;
+}
+</script></body>
 </html>

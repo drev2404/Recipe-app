@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Can I Cook?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }.container {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+p {
+  text-align: center;
+  color: #666;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #218838;
+}
+
+.output {
+  margin-top: 20px;
+  white-space: pre-wrap;
+  background: #f1f1f1;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.small {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+  text-align: center;
+}
+
+  </style>
+</head>
+<body>  <div class="container">
+    <h1>🍳 What Can I Cook?</h1>
+    <p>Enter ingredients you have and get a recipe instantly</p><input id="ingredients" placeholder="e.g. chicken, rice, garlic" />
+<button onclick="generateRecipe()">Generate Recipe</button>
+
+<div class="output" id="output">Your recipe will appear here...</div>
+
+<div class="small">
+  Demo version (no API required yet)
+</div>
+
+  </div>  <script>
+    function generateRecipe() {
+      const ingredients = document.getElementById('ingredients').value;
+      const output = document.getElementById('output');
+
+      if (!ingredients) {
+        output.innerText = "Please enter some ingredients.";
+        return;
+      }
+
+      // MOCK AI RESPONSE (replace later with real API)
+      const recipeName = "Simple " + ingredients.split(',')[0] + " Skillet";
+
+      const response = `🍽️ ${recipeName}\n\nIngredients:\n${ingredients}\n\nOptional: salt, pepper, olive oil, butter\n\nInstructions:\n1. Heat a pan over medium heat\n2. Add oil or butter\n3. Cook main ingredients until done\n4. Season to taste\n5. Serve hot and enjoy`;
+
+      output.innerText = response;
+    }
+  </script></body>
+</html>

@@ -2,9 +2,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AI-powered recipe generator that turns your ingredients into multiple personalized meal ideas with cooking time, servings, and diet options." />
-  <meta name="keywords" content="recipe generator, AI recipes, what can I cook, ingredients recipe, meal planner, cooking app" />
-  <meta name="author" content="Recipe App" />
+  <meta name="description" content="AI-powered recipe generator that turns your ingredients into personalized meals with diet, time, and cooking style options." />
+  <meta name="keywords" content="AI recipe generator, what can I cook, meal planner, ingredient recipes, cooking app" />
   <title>What Can I Cook? | AI Recipe Generator</title>  <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,7 +13,7 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 850px;
       margin: 30px auto;
       background: white;
       padding: 20px;
@@ -22,21 +21,14 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-
-    p {
-      text-align: center;
-      color: #666;
-    }
+    h1 { text-align: center; margin-bottom: 5px; }
+    p { text-align: center; color: #666; }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 15px;
+      margin-top: 10px;
     }
 
     input, select {
@@ -44,7 +36,6 @@
       padding: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 14px;
     }
 
     button {
@@ -59,9 +50,7 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: #218838;
-    }
+    button:hover { background: #218838; }
 
     .recipe {
       background: #f1f1f1;
@@ -71,22 +60,16 @@
       white-space: pre-wrap;
     }
 
-    .recipe-title {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    .small {
+    .loading {
       text-align: center;
-      font-size: 12px;
+      margin-top: 15px;
       color: #888;
-      margin-top: 10px;
     }
   </style></head>
 <body><div class="container">
   <h1>🍳 What Can I Cook?</h1>
-  <p>Turn ingredients into multiple AI-powered recipes instantly</p>  <input id="ingredients" placeholder="Enter ingredients (e.g. chicken, rice, garlic)" />  <div class="grid">
-    <input id="servings" type="number" placeholder="Servings (e.g. 2)" />
+  <p>AI-powered recipes from ingredients you already have</p>  <input id="ingredients" placeholder="Enter ingredients (e.g. chicken, rice, garlic)" />  <div class="grid">
+    <input id="servings" type="number" placeholder="Servings" />
     <input id="time" type="number" placeholder="Max cook time (mins)" />
   </div>  <div class="grid">
     <select id="diet">
@@ -105,15 +88,14 @@
 
   </div><button onclick="generateRecipes()">Generate Recipes</button>
 
-  <div id="output"></div>  <div class="small">Demo version (AI upgrade coming soon)</div>
+  <div id="output"></div>
 </div><script>
-function generateRecipes() {
+async function generateRecipes() {
   const ingredients = document.getElementById('ingredients').value;
-  const servings = document.getElementById('servings').value || 2;
-  const time = document.getElementById('time').value || 30;
+  const servings = document.getElementById('servings').value;
+  const time = document.getElementById('time').value;
   const diet = document.getElementById('diet').value;
   const style = document.getElementById('style').value;
-
   const output = document.getElementById('output');
 
   if (!ingredients) {
@@ -121,31 +103,42 @@ function generateRecipes() {
     return;
   }
 
-  const base = ingredients.split(',')[0];
+  output.innerHTML = "<div class='loading'>Generating AI recipes...</div>";
 
-  const recipes = [1,2,3].map(i => {
-    return `
-<div class="recipe">
-<div class="recipe-title">🍽️ Recipe ${i}: ${base} Dish ${i}</div>
+  try {
+    const res = await fetch('/api/recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ingredients, servings, time, diet, style })
+    });
 
-Servings: ${servings}
-Time: ${time} mins
-Diet: ${diet || "Any"}
-Style: ${style || "Any"}
+    const data = await res.json();
 
-Ingredients:
-${ingredients}, salt, pepper, olive oil
+    output.innerHTML = data.recipes.map(r => `
+      <div class="recipe">
+        🍽️ ${r.name}\n\n
+        Servings: ${r.servings}\n
+        Time: ${r.time}\n
+        Diet: ${r.diet}\n
+        Style: ${r.style}\n
 
-Instructions:
-1. Prepare ingredients
-2. Cook using ${style || "basic method"}
-3. Season to taste
-4. Serve hot
-</div>
-`;
-  }).join('');
+        Ingredients:\n${r.ingredients}\n
+        Instructions:\n${r.instructions}
+      </div>
+    `).join('');
 
-  output.innerHTML = recipes;
+  } catch (err) {
+    output.innerHTML = "Error generating recipes. Make sure API is connected.";
+  }
 }
-</script></body>
+</script><!--
+IMPORTANT SETUP NOTES:
+You must create a backend endpoint for /api/recipe using Vercel or Netlify Functions.
+This endpoint should call OpenAI API and return JSON like:
+{
+  recipes: [
+    { name, servings, time, diet, style, ingredients, instructions }
+  ]
+}
+--></body>
 </html>
